@@ -44,7 +44,7 @@ export class TelegramBotService implements OnApplicationBootstrap {
         console.error(error);
         throw new Error(error);
       }
-      console.log('setting next: ', data);
+
       player.setNextNode(data);
 
       bot.editMessageText(

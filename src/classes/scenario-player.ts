@@ -1,4 +1,8 @@
-import { IScenario, IScenarioNode } from '../interfaces/scenario.interface';
+import {
+  IScenario,
+  IScenarioButton,
+  IScenarioNode,
+} from '../interfaces/scenario.interface';
 import TelegramBot, {
   EditMessageTextOptions,
   InlineKeyboardMarkup,
@@ -17,21 +21,20 @@ export class ScenarioPlayer {
   }
 
   setNextNode(selected: string): void {
-    if (!this.currentNode.nodes) {
-      const error = `The scenario player failed to retrieve node ${selected}`;
+    if (!this.currentNode.buttons) {
+      const error = `The scenario player failed to retrieve next node buttons by selected "${selected}"`;
       console.error(error);
       throw new Error(error);
     }
-    let node = this.currentNode.nodes.find((node) => node.button === selected);
+    let node = this.currentNode.buttons.find(
+      (button) => button.title === selected,
+    )?.next;
+
     if (!node) {
-      const error = `The scenario player failed to retrieve node ${selected}`;
-      console.error(error);
-      throw new Error(error);
-    }
-    if (!node.text) {
-      // If the node has no text it considered as the last node in the tree
-      // We switch to the node marked as last or to the first
-      node = this.scenario.last || this.scenario;
+      // If there are no next node considered the last node,
+      // and we are moving up to the nearest exit node in the tree (TODO)
+      // if we have no exit we are moving to the root
+      node = this.scenario.exit || this.scenario;
     }
 
     this.currentNode = node;
@@ -53,20 +56,22 @@ export class ScenarioPlayer {
   }
 
   getMessageOptions(): SendMessageOptions | undefined {
-    const { nodes } = this.currentNode;
-    if (!nodes) {
+    const { buttons } = this.currentNode;
+    if (!buttons) {
       return undefined;
     }
     return {
-      reply_markup: getButtonsByNodes(nodes),
+      reply_markup: getInlineKeyboard(buttons),
     };
   }
 }
 
-const getButtonsByNodes = (nodes: IScenarioNode[]): InlineKeyboardMarkup => {
+const getInlineKeyboard = (
+  buttons: IScenarioButton[],
+): InlineKeyboardMarkup => {
   return {
-    inline_keyboard: nodes.map((node) => {
-      const text = node.button || 'TG API expects text here';
+    inline_keyboard: buttons.map((button) => {
+      const text = button.title || 'TG API expects text here';
       return [
         {
           text,

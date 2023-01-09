@@ -1,9 +1,13 @@
 export interface IScenario extends IScenarioNode {
-  last?: IScenarioNode;
+  exit?: IScenarioNode;
 }
 
 export interface IScenarioNode {
-  button?: string;
   text?: string;
-  nodes?: IScenarioNode[];
+  buttons?: IScenarioButton[];
+}
+
+export interface IScenarioButton {
+  title: string;
+  next: IScenarioNode;
 }
