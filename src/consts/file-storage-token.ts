@@ -1,0 +1,1 @@
+export const FILE_STORAGE_TOKEN = 'FILE_STORAGE_TOKEN';
