@@ -14,7 +14,13 @@ export class ScenarioService {
     return this.fileStorage
       .getJsonFile(Env.process('SCENARIO_FILE_NAME'))
       .then((value) => {
-        return JSON.parse(value);
+        let object: IScenario = {};
+        try {
+          object = JSON.parse(value);
+        } catch (err) {
+          console.error(err);
+        }
+        return object;
       });
   }
 }
