@@ -15,15 +15,13 @@ export class TelegramBotService implements OnApplicationBootstrap {
 
     let player: ScenarioPlayer;
 
-    bot.on('message', async (msg) => {
+    bot.on('text', async (msg) => {
       for (let i = 1; i < 99; i++) {
         // workaround to clear the chat
         bot
           .deleteMessage(msg.chat.id, String(msg.message_id - i))
           .catch(() => void 0);
       }
-      bot.clearReplyListeners();
-      bot.clearTextListeners();
 
       const scenario = await this.scenarioService.getScenario();
       player = new ScenarioPlayer(scenario);
