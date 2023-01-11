@@ -3,6 +3,7 @@ import { IScenario } from '../interfaces/scenario.interface';
 import { IFileStorage } from '../interfaces/file-storage.interface';
 import { Env } from '../classes/env';
 import { FILE_STORAGE_TOKEN } from '../consts/file-storage-token';
+import * as YAML from 'yaml';
 
 @Injectable()
 export class ScenarioService {
@@ -12,11 +13,11 @@ export class ScenarioService {
 
   getScenario(): Promise<IScenario> {
     return this.fileStorage
-      .getJsonFile(Env.process('SCENARIO_FILE_NAME'))
+      .getYamlFile(Env.process('SCENARIO_FILE_NAME'))
       .then((value) => {
         let object: IScenario = {};
         try {
-          object = JSON.parse(value);
+          object = YAML.parse(value);
         } catch (err) {
           console.error(err);
         }
