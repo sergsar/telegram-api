@@ -26,6 +26,12 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Generated
+
+```bash
+npx @nestjs/cli new telegram-api --strict
+```
+
 ## Installation
 
 ```bash
