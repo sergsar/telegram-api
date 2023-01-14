@@ -16,13 +16,6 @@ export class TelegramBotService implements OnApplicationBootstrap {
     let player: ScenarioPlayer;
 
     bot.on('text', async (msg) => {
-      for (let i = 1; i < 99; i++) {
-        // workaround to clear the chat
-        bot
-          .deleteMessage(msg.chat.id, String(msg.message_id - i))
-          .catch(() => void 0);
-      }
-
       const scenario = await this.scenarioService.getScenario();
       player = new ScenarioPlayer(scenario);
 
@@ -35,7 +28,7 @@ export class TelegramBotService implements OnApplicationBootstrap {
       );
     });
 
-    bot.on('callback_query', (callbackQuery) => {
+    bot.on('callback_query', async (callbackQuery) => {
       const { message, data } = callbackQuery;
       if (!(message && data)) {
         const error = 'Bot failed to resolve next step';
@@ -43,11 +36,21 @@ export class TelegramBotService implements OnApplicationBootstrap {
         throw new Error(error);
       }
 
+      await bot.editMessageText(message.text || '', {
+        message_id: message.message_id,
+        chat_id: message.chat.id,
+      });
+
+      await bot.sendMessage(message.chat.id, `"${data}"`);
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       player.setNextNode(data);
 
-      bot.editMessageText(
+      await bot.sendMessage(
+        message.chat.id,
         player.getMessage(),
-        player.getEditMessageOptions(message),
+        player.getMessageOptions(),
       );
     });
   }
