@@ -11,6 +11,7 @@ export class ScenarioService {
     @Inject(FILE_STORAGE_TOKEN) private readonly fileStorage: IFileStorage,
   ) {}
 
+  // TODO: use store
   getScenario(): Promise<IScenario> {
     return this.fileStorage
       .getYamlFile(Env.process('SCENARIO_FILE_NAME'))
