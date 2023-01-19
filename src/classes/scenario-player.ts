@@ -1,7 +1,7 @@
 import {
   IScenario,
-  IScenarioFlatButton,
   IScenarioFlatNode,
+  IScenarioFlatNodeContent,
 } from '../interfaces/scenario.interface';
 import { traverse } from '../utils/scenario-nodes';
 
@@ -20,17 +20,17 @@ export class ScenarioPlayer {
       throw new Error(message);
     }
     return (
-      node.text || 'Please keep in mind the telegram API expects text here'
+      node.message || 'Please keep in mind the telegram API expects text here'
     );
   }
 
-  getButtons(index: number): IScenarioFlatButton[] | undefined {
+  getFlatNodeContent(index: number): IScenarioFlatNodeContent[] | undefined {
     const node = this.flatNodes[index];
     if (!node) {
       const message = `the node with index ${index} doesn't exist`;
       console.error(message);
       throw new Error(message);
     }
-    return node.buttons;
+    return node.content;
   }
 }

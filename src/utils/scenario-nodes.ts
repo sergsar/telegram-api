@@ -13,17 +13,17 @@ export const traverse = (
   }
   const flat = convertToFlatNode(node, index, parent);
   index++;
-  if (!node.buttons) {
+  if (!node.content) {
     return [flat];
   }
-  flat.buttons = [];
-  const nested = node.buttons.reduce((acc: IScenarioFlatNode[], curr) => {
+  flat.content = [];
+  const nested = node.content.reduce((acc: IScenarioFlatNode[], curr) => {
     const nextIndex = acc.length + index;
-    flat.buttons?.push({
-      title: curr.title,
-      next: curr.next ? nextIndex : 0,
+    flat.content?.push({
+      name: curr.name,
+      next: curr.message ? nextIndex : 0,
     });
-    return [...acc, ...traverse(curr.next, nextIndex, flat.index)];
+    return [...acc, ...traverse(curr, nextIndex, flat.index)];
   }, []);
   if (node.exit) {
     nested.push(
@@ -31,9 +31,9 @@ export const traverse = (
     );
   }
   nested.forEach((node) => {
-    node.buttons?.forEach((button) => {
-      if (!button.next) {
-        button.next = findNodeNearestExitIndex(node, nested);
+    node.content?.forEach((item) => {
+      if (!item.next) {
+        item.next = findNodeNearestExitIndex(node, nested);
       }
     });
   });
@@ -47,7 +47,8 @@ const convertToFlatNode = (
   exit?: boolean,
 ): IScenarioFlatNode => {
   return {
-    text: node.text,
+    name: node.name,
+    message: node.message,
     index,
     parent,
     exitNode: exit,
