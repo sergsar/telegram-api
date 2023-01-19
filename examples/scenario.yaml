@@ -1,0 +1,25 @@
+message: 'Hello Dear Customer!'
+variants:
+- on: 'I want to start a bank account!'
+  message: 'Do you have a NIE?'
+  variants:
+  - on: 'Yes'
+  - on: 'No'
+    message: 'Do you have your passport scan?'
+    variants: 
+    - on: 'Yes'
+      message: 'Do you have 4x4 size photo?'
+      variants:
+      - on: 'Yes'
+      - on: 'No'
+        message: 'You need to make a 4x4 photo to continue!'
+    - on: 'No'
+      message: 'No problem! See you later with the passport scan!'
+    exit:
+      message: 'You have everything to start the NIE registration!'
+- on: 'Alert!'
+  message: 'You can get us by phone number: xxx-xx-xx-xx'
+- on: 'Not interesting'
+  message: 'Bye bye!'
+exit:
+  message: 'Congratulations, You can start the bank account!'
