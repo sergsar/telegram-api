@@ -13,14 +13,14 @@ export const traverse = (
   }
   const flat = convertToFlatNode(node, index, parent);
   index++;
-  if (!node.content) {
+  if (!node.variants) {
     return [flat];
   }
-  flat.content = [];
-  const nested = node.content.reduce((acc: IScenarioFlatNode[], curr) => {
+  flat.joints = [];
+  const nested = node.variants.reduce((acc: IScenarioFlatNode[], curr) => {
     const nextIndex = acc.length + index;
-    flat.content?.push({
-      name: curr.name,
+    flat.joints?.push({
+      on: curr.on,
       next: curr.message ? nextIndex : 0,
     });
     return [...acc, ...traverse(curr, nextIndex, flat.index)];
@@ -31,9 +31,9 @@ export const traverse = (
     );
   }
   nested.forEach((node) => {
-    node.content?.forEach((item) => {
-      if (!item.next) {
-        item.next = findNodeNearestExitIndex(node, nested);
+    node.joints?.forEach((joint) => {
+      if (!joint.next) {
+        joint.next = findNodeNearestExitIndex(node, nested);
       }
     });
   });
@@ -47,7 +47,7 @@ const convertToFlatNode = (
   exit?: boolean,
 ): IScenarioFlatNode => {
   return {
-    name: node.name,
+    on: node.on,
     message: node.message,
     index,
     parent,

@@ -2,10 +2,10 @@ import {
   InlineKeyboardMarkup,
   SendMessageOptions,
 } from 'node-telegram-bot-api';
-import { IScenarioFlatNodeContent } from '../interfaces/scenario.interface';
+import { IScenarioFlatNodeJoint } from '../interfaces/scenario.interface';
 
 export const getMessageOptions = (
-  buttons?: IScenarioFlatNodeContent[],
+  buttons?: IScenarioFlatNodeJoint[],
 ): SendMessageOptions | undefined => {
   if (!buttons) {
     return undefined;
@@ -16,11 +16,11 @@ export const getMessageOptions = (
 };
 
 const getInlineKeyboard = (
-  buttons: IScenarioFlatNodeContent[],
+  buttons: IScenarioFlatNodeJoint[],
 ): InlineKeyboardMarkup => {
   return {
     inline_keyboard: buttons.map((button) => {
-      const text = button.name || 'TG API expects text here';
+      const text = button.on || 'TG API expects text here';
       return [
         {
           text,

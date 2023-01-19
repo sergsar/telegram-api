@@ -1,22 +1,22 @@
 export type IScenario = IScenarioNode;
 
 export interface IScenarioNode {
-  name?: string
+  on?: string
   message?: string;
-  content?: IScenarioNode[];
+  variants?: IScenarioNode[];
   exit?: IScenarioNode;
 }
 
 export interface IScenarioFlatNode {
-  name?: string;
+  on?: string;
   message?: string;
   index: number;
   parent: number;
   exitNode?: boolean;
-  content?: IScenarioFlatNodeContent[];
+  joints?: IScenarioFlatNodeJoint[];
 }
 
-export interface IScenarioFlatNodeContent {
-  name?: string;
+export interface IScenarioFlatNodeJoint {
+  on?: string;
   next: number;
 }

@@ -1,7 +1,7 @@
 import {
   IScenario,
   IScenarioFlatNode,
-  IScenarioFlatNodeContent,
+  IScenarioFlatNodeJoint,
 } from '../interfaces/scenario.interface';
 import { traverse } from '../utils/scenario-nodes';
 
@@ -24,13 +24,13 @@ export class ScenarioPlayer {
     );
   }
 
-  getFlatNodeContent(index: number): IScenarioFlatNodeContent[] | undefined {
+  getFlatNodeJoints(index: number): IScenarioFlatNodeJoint[] | undefined {
     const node = this.flatNodes[index];
     if (!node) {
       const message = `the node with index ${index} doesn't exist`;
       console.error(message);
       throw new Error(message);
     }
-    return node.content;
+    return node.joints;
   }
 }

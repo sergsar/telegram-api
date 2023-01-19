@@ -4,7 +4,7 @@ import { Env } from '../classes/env';
 import { ScenarioService } from './scenario-service';
 import { ScenarioPlayer } from '../classes/scenario-player';
 import { getMessageOptions } from '../utils/node-telegram-bot-api';
-import { IScenarioFlatNodeContent } from '../interfaces/scenario.interface';
+import { IScenarioFlatNodeJoint } from '../interfaces/scenario.interface';
 
 @Injectable()
 export class TelegramBotService implements OnApplicationBootstrap {
@@ -18,11 +18,11 @@ export class TelegramBotService implements OnApplicationBootstrap {
     bot.on('text', async (msg) => {
       const scenario = await this.scenarioService.getScenario();
       const player = new ScenarioPlayer(scenario);
-      const content = player.getFlatNodeContent(0);
+      const joints = player.getFlatNodeJoints(0);
       await bot.sendMessage(
         msg.chat.id,
         player.getMessage(0),
-        getMessageOptions(content),
+        getMessageOptions(joints),
       );
     });
 
@@ -37,23 +37,23 @@ export class TelegramBotService implements OnApplicationBootstrap {
         throw new Error(error);
       }
 
-      const contentItem: IScenarioFlatNodeContent = JSON.parse(data);
+      const joint: IScenarioFlatNodeJoint = JSON.parse(data);
 
       await bot.editMessageText(message.text || '', {
         message_id: message.message_id,
         chat_id: message.chat.id,
       });
 
-      await bot.sendMessage(message.chat.id, `"${contentItem.name}"`);
+      await bot.sendMessage(message.chat.id, `"${joint.on}"`);
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const content = player.getFlatNodeContent(contentItem.next);
+      const joints = player.getFlatNodeJoints(joint.next);
 
       await bot.sendMessage(
         message.chat.id,
-        player.getMessage(contentItem.next),
-        getMessageOptions(content),
+        player.getMessage(joint.next),
+        getMessageOptions(joints),
       );
     });
   }
